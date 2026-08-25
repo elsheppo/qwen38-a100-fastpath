@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If this A100 validation package is useful, cite this repository and the upstream implementation."
+title: "Qwen3.8-27B A100 fast path"
+type: software
+authors:
+  - family-names: Bryan
+    given-names: Shep
+year: 2026
+license: Apache-2.0
+repository-code: "https://github.com/elsheppo/qwen38-a100-fastpath"
+keywords:
+  - Qwen3.8-27B
+  - NVIDIA A100
+  - vLLM
+  - DFlash2
+  - speculative decoding
+

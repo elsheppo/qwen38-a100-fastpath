@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "measurement": "committed completion tokens per second",
+  "runtimeRevision": "2738b38fdd40d455b4cdbc35d7763f0d47203af0",
+  "profile": {
+    "speculation": "DFlash2",
+    "draftTokens": 7,
+    "lookupDrafting": false,
+    "kvPoolBytes": 8589934592,
+    "maxModelLength": 65536,
+    "maxSequences": 8,
+    "gpuMemoryUtilization": 0.93
+  },
+  "baseQwen": {
+    "a10080": {
+      "greedyC1": [
+        {"workload":"CUDA code","raw":79.7811,"dflash2":306.5447,"speedup":3.8423},
+        {"workload":"structured JSONL","raw":79.7899,"dflash2":474.1540,"speedup":5.9425},
+        {"workload":"English story","raw":79.7997,"dflash2":168.0794,"speedup":2.1063}
+      ],
+      "sampledLongFormWriting": {"rawMean":78.7710,"dflash2Mean":156.0176,"speedup":1.9807,"pairCount":24},
+      "c8Aggregate": [
+        {"workload":"CUDA code","dflash2":1064.6348,"medianPerStream":145.1751,"p95TtftMs":489.2044},
+        {"workload":"structured JSONL","dflash2":1772.0914,"medianPerStream":227.2431,"p95TtftMs":474.1560},
+        {"workload":"English story","dflash2":625.6616,"medianPerStream":79.5496,"p95TtftMs":449.0525}
+      ]
+    },
+    "a10040": {
+      "greedyC1": [
+        {"workload":"CUDA code","raw":69.8780,"dflash2":242.9014,"speedup":3.4761},
+        {"workload":"structured JSONL","raw":69.8695,"dflash2":417.7728,"speedup":5.9793},
+        {"workload":"English story","raw":69.8724,"dflash2":148.9286,"speedup":2.1314}
+      ],
+      "peakDflashFramebufferMiB": 34950,
+      "scope": "C1 replication only"
+    }
+  },
+  "rvn": {
+    "hardware": "NVIDIA A100-SXM4-80GB",
+    "sampledProsePrimaryMedian": {"raw":73.1546,"dflash2":138.3839,"speedup":1.8917,"ttftMs":155.50},
+    "separateStoryFixture": {"c1":152.2991,"c8Aggregate":609.8681,"c8MedianPerStream":78.2950},
+    "correctness": {"chatTemplate":true,"structuredOutput":true,"toolCall":true,"cleanRestart":true,"blindQuality":true},
+    "outcome": "promising-below-precommitted-140-tok-s-target"
+  },
+  "importantCaveat": "Rates are workload-specific. Code and repetitive structured output have much higher speculative acceptance than sampled prose."
+}
+

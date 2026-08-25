@@ -1,0 +1,26 @@
+Qwen3.8-27B A100 fast path
+Copyright 2026 Shep Bryan and contributors
+
+This distribution builds on and interoperates with:
+
+- Qwen/Qwen3.8-27B, Apache-2.0
+  https://huggingface.co/Qwen/Qwen3.8-27B
+- syv-ai/qwen38-27b-rtx3090, Apache-2.0
+  https://github.com/syv-ai/qwen38-27b-rtx3090
+- dbirks/Qwen3.8-27B-W4A16-AutoRound, Apache-2.0
+  https://huggingface.co/dbirks/Qwen3.8-27B-W4A16-AutoRound
+- syvai/Qwen3.8-27B-DFlash2-W4A16, Apache-2.0
+  https://huggingface.co/syvai/Qwen3.8-27B-DFlash2-W4A16
+- 0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF,
+  identified by its model card as Apache-2.0
+  https://huggingface.co/0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF
+- AutoRound, Apache-2.0
+  https://github.com/intel/auto-round
+- vLLM, Apache-2.0
+  https://github.com/vllm-project/vllm
+
+The runtime implementation and DFlash2 drafter are upstream work. This
+repository contributes a pinned A100 deployment overlay, A100 40/80 GB
+measurements, the fixed 8 GiB pool correction for the tested workload, and an
+RVN-specific W4A16 derivative/qualification path.
+

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "RVN Qwen3.8-27B W4A16 serving-directory manifest",
+  "sourceSha256": "fe3cb9c7d067f0016fb8ab0150e2b226c4dfb4e63b497e46ada1e7744b035cdc",
+  "totalBytes": 17702015479,
+  "files": [
+    {"path":"chat_template.jinja","bytes":8952,"sha256":"c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041"},
+    {"path":"config.json","bytes":8099,"sha256":"d94e753cc646269ace4ff32727e7babbcf44291cbe362afa02a0acb96f7a7d30"},
+    {"path":"generation_config.json","bytes":205,"sha256":"e02a0427373671f52e1b1864a59cf9aa05661848ddfd9bea75dfdab1ee4528a1"},
+    {"path":"model-00001-of-00006.safetensors","bytes":3210997056,"sha256":"92f88d9f744fc950a64cf01773a9921f7e90338fc99a067dbd815bbe5692f930"},
+    {"path":"model-00002-of-00006.safetensors","bytes":3195020880,"sha256":"e4136fb072e9fc579ee2deb46d8cd07dc2cd098ffc651d9f8499ea3d52af973a"},
+    {"path":"model-00003-of-00006.safetensors","bytes":3195020872,"sha256":"cb6ba954150698512e584834a28fe9872a30785709bea05452340added20b0eb"},
+    {"path":"model-00004-of-00006.safetensors","bytes":2995214544,"sha256":"2e2b3d4e8dea4be69bb6f99a1123bdc406e391d00226f22ea70911072978853b"},
+    {"path":"model-00005-of-00006.safetensors","bytes":2542807240,"sha256":"84867c3eb278def97633f874a49e0e50ec9f48200b261d9cc6cdb6f8ec570abd"},
+    {"path":"model-00006-of-00006.safetensors","bytes":2542796896,"sha256":"45c264e8b495163768f9d6d51687b9835ff0d6cdd09b368649ae0962f8789823"},
+    {"path":"model.safetensors.index.json","bytes":145213,"sha256":"6ff9a76552229e26c83e4814ed837041a1e66469efc480e13a8f1fb5a02a48c2"},
+    {"path":"quantization_config.json","bytes":5073,"sha256":"e9d52d3d55cbfd1f83a4cd04ff36cc709b2bea9a912e331dc1793ab7b3a51a78"},
+    {"path":"tokenizer.json","bytes":19989325,"sha256":"06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"},
+    {"path":"tokenizer_config.json","bytes":1124,"sha256":"66e427c470fe580fe8c7b5725d857af23d8417e37fae62667ec698306a19987b"}
+  ]
+}
+
