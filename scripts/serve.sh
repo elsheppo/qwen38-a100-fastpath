@@ -16,7 +16,12 @@ case "$profile" in
     target_host="$RVN_MODEL_DIR"
     target_container=/app/target
     ;;
-  *) printf 'Profile must be base or rvn.\n' >&2; exit 2 ;;
+  rvn-vision)
+    profile_file="$RELEASE_ROOT/profiles/rvn-vision-a10080.env"
+    target_host="$RVN_VISION_MODEL_DIR"
+    target_container=/app/target
+    ;;
+  *) printf 'Profile must be base, rvn, or rvn-vision.\n' >&2; exit 2 ;;
 esac
 case "$mode" in raw|dflash2) ;; *) printf 'Mode must be raw or dflash2.\n' >&2; exit 2 ;; esac
 
@@ -51,14 +56,28 @@ common_args=(
 if [[ -n "${VLLM_API_KEY:-}" ]]; then common_args+=(--env VLLM_API_KEY); fi
 
 if [[ "$mode" = raw ]]; then
-  docker run "${common_args[@]}" \
-    --env TARGET_MODEL="$target_container" \
-    --env PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
-    --env VLLM_USE_FLASHINFER_SAMPLER=0 \
-    "$IMAGE_TAG" bash -lc \
-    'export PATH=/app/venv/bin:$PATH; exec venv/bin/vllm serve "$TARGET_MODEL" --served-model-name qwen3.8-27b --host 0.0.0.0 --port 18020 --gpu-memory-utilization 0.93 --max-model-len 65536 --max-num-seqs 8 --language-model-only --attention-backend FLASH_ATTN --kv-cache-dtype bfloat16 --mamba-ssm-cache-dtype float16 --async-scheduling --max-num-batched-tokens 2048 --compilation-config '\''{"max_cudagraph_capture_size":32,"custom_ops":["+rms_norm","+silu_and_mul"]}'\'' --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder'
+  if [[ "$profile" = rvn-vision ]]; then
+    docker run "${common_args[@]}" \
+      --env TARGET_MODEL="$target_container" \
+      --env PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+      --env VLLM_USE_FLASHINFER_SAMPLER=0 \
+      "$IMAGE_TAG" bash -lc \
+      'export PATH=/app/venv/bin:$PATH; exec venv/bin/vllm serve "$TARGET_MODEL" --served-model-name qwen3.8-27b --host 0.0.0.0 --port 18020 --gpu-memory-utilization 0.93 --kv-cache-memory 8589934592 --max-model-len 65536 --max-num-seqs 8 --limit-mm-per-prompt '\''{"image":{"count":1}}'\'' --mm-processor-kwargs '\''{"size":{"shortest_edge":65536,"longest_edge":2097152}}'\'' --attention-backend FLASH_ATTN --kv-cache-dtype bfloat16 --mamba-ssm-cache-dtype float16 --async-scheduling --max-num-batched-tokens 2048 --compilation-config '\''{"max_cudagraph_capture_size":32,"custom_ops":["+rms_norm","+silu_and_mul"]}'\'' --reasoning-parser qwen3'
+  else
+    docker run "${common_args[@]}" \
+      --env TARGET_MODEL="$target_container" \
+      --env PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+      --env VLLM_USE_FLASHINFER_SAMPLER=0 \
+      "$IMAGE_TAG" bash -lc \
+      'export PATH=/app/venv/bin:$PATH; exec venv/bin/vllm serve "$TARGET_MODEL" --served-model-name qwen3.8-27b --host 0.0.0.0 --port 18020 --gpu-memory-utilization 0.93 --max-model-len 65536 --max-num-seqs 8 --language-model-only --attention-backend FLASH_ATTN --kv-cache-dtype bfloat16 --mamba-ssm-cache-dtype float16 --async-scheduling --max-num-batched-tokens 2048 --compilation-config '\''{"max_cudagraph_capture_size":32,"custom_ops":["+rms_norm","+silu_and_mul"]}'\'' --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder'
+  fi
 else
+  vision_args=()
+  if [[ "$profile" = rvn-vision ]]; then
+    vision_args=(--env VISION=1)
+  fi
   docker run "${common_args[@]}" \
+    "${vision_args[@]}" \
     --env MODEL="$target_container" \
     --env DRAFT=/app/models/Qwen3.8-27B-DFlash2-W4A16 \
     --env VERIFY=0 --env CTX --env SPEC --env LOOKUP --env TOOLS \

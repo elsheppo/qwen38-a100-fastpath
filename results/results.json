@@ -42,6 +42,40 @@
     "correctness": {"chatTemplate":true,"structuredOutput":true,"toolCall":true,"cleanRestart":true,"blindQuality":true},
     "outcome": "promising-below-precommitted-140-tok-s-target"
   },
+  "rvnVision": {
+    "hardware": "NVIDIA A100-SXM4-80GB",
+    "targetArchitecture": "Qwen3_5ForConditionalGeneration",
+    "assembly": {
+      "rvnLanguageAndHeadEntries": 1651,
+      "visionEntries": 333,
+      "rvnTensorPayloadBytes": 17681667328,
+      "totalTensorPayloadBytes": 18603127520,
+      "languagePayloadBytesChanged": false
+    },
+    "imageConditionedSampledGeneration": {
+      "rawMedianCommittedTokS": 72.5755,
+      "dflash2MedianCommittedTokS": 140.8400,
+      "speedup": 1.9406,
+      "rawMedianTtftMs": 132.1606,
+      "dflash2MedianTtftMs": 146.4453
+    },
+    "visionBreadthBattery": {
+      "caseCount": 100,
+      "machineScored": {
+        "rawCorrect": 87,
+        "dflash2Correct": 88,
+        "wrongImageControlCorrect": 35
+      },
+      "manualAdjudicatedConservative": {
+        "rawCorrect": 88,
+        "dflash2Correct": 89
+      },
+      "rawDflashAnswerAgreementPercent": 98,
+      "confirmedLabels": 93,
+      "ambiguousCases": 6,
+      "definiteBenchmarkDefects": 1
+    },
+    "outcome": "qualified-with-numerical-caveat"
+  },
   "importantCaveat": "Rates are workload-specific. Code and repetitive structured output have much higher speculative acceptance than sampled prose."
 }
-

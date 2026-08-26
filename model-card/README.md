@@ -26,7 +26,8 @@ companion DFlash2 runtime on the frozen sampled-prose benchmark, a 1.89x
 speedup.
 
 This Hugging Face repo contains the W4A16 target. The accelerated runtime,
-DFlash2 drafter, exact launch settings, and base-Qwen A100 results live in
+DFlash2 drafter, optional local vision assembly, exact launch settings, and
+base-Qwen A100 results live in
 [`elsheppo/qwen38-a100-fastpath`](https://github.com/elsheppo/qwen38-a100-fastpath).
 
 ## What this model is
@@ -125,11 +126,30 @@ Run the target without DFlash2 for comparison:
 ./scripts/serve.sh rvn raw
 ```
 
+### Add vision locally
+
+The model artifact on this page is still text-only. The companion repository
+can combine these exact text weights with a pinned 921 MB Qwen vision payload
+without replacing the RVN language tensors:
+
+```bash
+./scripts/bootstrap.sh rvn-vision
+./scripts/serve.sh rvn-vision dflash2
+./scripts/vision_smoke.sh
+```
+
+The assembled target measured 72.58 tok/s raw and 140.84 tok/s with DFlash2 on
+the frozen image-conditioned generation benchmark, a 1.94x speedup. In a
+separate 100-image breadth battery, the DFlash path scored 88/100 with the
+correct images and 35/100 after the images were deliberately mismatched.
+
 ## Caveats
 
 - This exact RVN artifact was verified on A100 80 GB. The companion project
   separately verified regular Qwen on A100 40 GB.
-- The serving profile is text-only and launches with `--language-model-only`.
+- The `rvn` serving profile is text-only and launches with
+  `--language-model-only`. The optional `rvn-vision` profile assembles a
+  separate local conditional-generation target.
 - Code and repetitive structured output accept more speculative drafts than
   sampled prose. Throughput moves with the workload.
 - Stochastic responses can differ between raw, speculative, and dynamically

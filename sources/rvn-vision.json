@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "rvnTarget": {
+    "repository": "sheppo/Qwen3.8-27B-Heretic-Abliterated-W4A16-A100",
+    "revision": "a13afb3b0fc361e100c8352e925495832a0ed1a3",
+    "expectedIndexEntries": 1651,
+    "expectedTensorBytes": 17681667328
+  },
+  "multimodalMetadata": {
+    "repository": "dbirks/Qwen3.8-27B-W4A16-AutoRound",
+    "revision": "1f05c441c4e64ae0549de44fa9ea5a6d43610314",
+    "expectedLanguageEntries": 1650,
+    "expectedVisionEntries": 333
+  },
+  "visionPayload": {
+    "repository": "bowmanslayer/Qwen3.8-27B-W4A16-vision",
+    "revision": "3b70f57a5f9bb48a9066e526b1b6a5c4bdb51619",
+    "file": "vision.safetensors",
+    "bytes": 921497224,
+    "sha256": "d7defc90994f7bbc58a8feb8d3c4144895babb434a9be9f47e88ae3646e1df33",
+    "expectedEntries": 333
+  },
+  "dflash2": {
+    "repository": "syvai/Qwen3.8-27B-DFlash2-W4A16",
+    "revision": "4d30ec736ffc6b8688dc2ae2b502d9b48bdec279"
+  },
+  "testedRuntime": {
+    "repository": "syv-ai/qwen38-27b-rtx3090",
+    "revision": "2738b38fdd40d455b4cdbc35d7763f0d47203af0",
+    "vllmVersion": "0.27.1"
+  }
+}

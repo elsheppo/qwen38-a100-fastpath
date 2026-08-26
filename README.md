@@ -1,13 +1,16 @@
 # Qwen3.8-27B A100 fast path
 
 Reproducible A100 serving profiles for regular Qwen3.8-27B and an RVN
-abliterated derivative. The release includes pinned revisions, launch scripts,
-benchmark records, and the converted RVN W4A16 checkpoint.
+abliterated derivative, including an optional vision-capable RVN build. The
+release includes pinned revisions, launch scripts, benchmark records, and the
+converted RVN W4A16 checkpoint.
 
 At concurrency one:
 
 - Regular Qwen3.8-27B went from about **79 to 158 tok/s** on sampled writing.
 - The exact abliterated RVN model went from **73 to 138 tok/s**.
+- The vision-capable RVN build went from **72.58 to 140.84 tok/s** on a frozen
+  image-conditioned generation benchmark.
 - The same regular-Qwen profile also passed on an A100 40 GB.
 - A fixed **8 GiB** state/KV pool turned out to matter enormously once requests
   became concurrent.
@@ -27,6 +30,7 @@ number answer different questions.
 | Base Qwen | A100 80 GB | greedy story | 79.80 tok/s | 168.08 tok/s | 2.11x |
 | Base Qwen | A100 40 GB | greedy story | 69.87 tok/s | 148.93 tok/s | 2.13x |
 | Exact RVN | A100 80 GB | sampled prose, primary median | 73.15 tok/s | 138.38 tok/s | 1.89x |
+| Exact RVN + vision | A100 80 GB | image-conditioned sampled generation | 72.58 tok/s | 140.84 tok/s | 1.94x |
 
 Regular Qwen reached 306.54 tok/s on CUDA code and 474.15 tok/s on repetitive
 structured JSONL. Those are real single-stream measurements. They are also a
@@ -61,6 +65,8 @@ This repo carries the A100-specific work:
   without applying the base-model fast overlay over its modified weights.
 - Ran chat-template, structured-output, tool-call, restart, mechanical, and
   blind-writing checks before keeping the RVN result.
+- Reattached Qwen's vision tower without changing the RVN language tensor
+  payload, then qualified the combined target with raw and DFlash2 serving.
 
 The regular and abliterated results belong together. Regular Qwen shows that
 the runtime path works broadly on A100. RVN shows that the same path survives a
@@ -88,6 +94,27 @@ Docker with NVIDIA Container Toolkit, and enough disk for the model.
 ./scripts/smoke.sh
 ```
 
+### RVN abliterated Qwen with vision
+
+```bash
+./scripts/bootstrap.sh rvn-vision
+./scripts/serve.sh rvn-vision dflash2
+./scripts/vision_smoke.sh
+```
+
+The vision bootstrap downloads the exact RVN text target, pinned multimodal
+metadata, and a 921 MB Qwen vision payload. It then assembles one local
+multimodal checkpoint. No second full checkpoint is hosted or downloaded, but
+the assembly does create an additional 18.6 GB local target, so allow roughly
+45 GB of model storage for this profile.
+
+The smoke test generates a red-square image locally and sends it through the
+OpenAI-compatible endpoint. You can also try one of your own:
+
+```bash
+./scripts/vision_smoke.sh --image ./photo.jpg
+```
+
 The first bootstrap builds the pinned container and downloads the selected
 target plus the public W4A16 DFlash2 drafter. The first server start can sit
 there looking suspiciously inert for several minutes while torch compiles and
@@ -108,6 +135,12 @@ comparison:
 
 ```bash
 ./scripts/serve.sh rvn raw
+```
+
+For the multimodal raw comparison, use:
+
+```bash
+./scripts/serve.sh rvn-vision raw
 ```
 
 ## The settings worth copying
@@ -154,10 +187,24 @@ thinking off, seven DFlash tokens. Change the sampling regime, thinking mode,
 draft width, attention backend, or runtime revision and you have created a new
 quality question.
 
+## Does vision actually work?
+
+The short answer is yes. In a 100-image breadth battery, the DFlash2 path got
+88 answers right with the correct images and 35 right after the images were
+deliberately mismatched. Raw and DFlash2 agreed on 98 of 100 answers. Manual
+review found one definite benchmark-label defect and six ambiguous cases; the
+conservative adjudicated scores were 88/100 raw and 89/100 DFlash2.
+
+That wrong-image control is important. It shows the language model was not
+simply guessing from the questions while ignoring the pixels. This is useful
+qualification evidence, not a claim of a new general-purpose vision benchmark
+record.
+
 ## What is in here
 
 - `scripts/` — bootstrap, serve, smoke, stop, artifact verification, and upload
 - `profiles/` — the frozen A100 settings
+- `sources/` — immutable source pins for local multimodal assembly
 - `patches/` — immutable pins applied to the tested upstream source
 - `results/` — compact benchmark records
 - `model-card/` — the Hugging Face card and RVN artifact manifest
@@ -170,10 +217,11 @@ repo pins them instead of uploading duplicate copies under a new name.
 
 ## Caveats
 
-- The exact RVN artifact was qualified on A100 80 GB. The separate A100 40 GB
-  replication used regular Qwen.
-- The packaged RVN path is text-only and launches with
-  `--language-model-only`.
+- The exact RVN artifact and its vision assembly were qualified on A100 80 GB.
+  The separate A100 40 GB replication used regular Qwen.
+- The Hugging Face RVN artifact remains text-only. The `rvn-vision` bootstrap
+  composes it with the pinned vision payload locally; the ordinary `rvn`
+  profile still launches with `--language-model-only`.
 - Stochastic responses can differ across serving modes and dynamic batches.
   The quality tests look for material degradation; they do not promise byte
   identity.

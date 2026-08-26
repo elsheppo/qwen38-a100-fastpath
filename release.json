@@ -25,6 +25,20 @@
       "repository": "syvai/Qwen3.8-27B-DFlash2-W4A16",
       "revision": "4d30ec736ffc6b8688dc2ae2b502d9b48bdec279"
     },
+    "rvnVision": {
+      "assembly": "local-header-remap-plus-pinned-vision-payload",
+      "multimodalMetadata": {
+        "repository": "dbirks/Qwen3.8-27B-W4A16-AutoRound",
+        "revision": "1f05c441c4e64ae0549de44fa9ea5a6d43610314"
+      },
+      "visionPayload": {
+        "repository": "bowmanslayer/Qwen3.8-27B-W4A16-vision",
+        "revision": "3b70f57a5f9bb48a9066e526b1b6a5c4bdb51619",
+        "file": "vision.safetensors",
+        "bytes": 921497224,
+        "sha256": "d7defc90994f7bbc58a8feb8d3c4144895babb434a9be9f47e88ae3646e1df33"
+      }
+    },
     "rvnSource": {
       "repository": "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF",
       "revision": "8581a3e4cd8cdeca9bb6709d81ebcbcdfc93fe43",
